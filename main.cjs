@@ -28,7 +28,7 @@ if (fs.existsSync('./skinport-session')) {
     console.log('Directory exists!');
     (async () =>{
         browser = await puppeteer.launch({
-            headless: true, // Show the browser (helps with debugging/logins)
+            headless: false, // Show the browser (helps with debugging/logins)
             defaultViewport: null,
             userDataDir: './skinport-session',
         })})();
