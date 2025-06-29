@@ -31,8 +31,12 @@ if (fs.existsSync('./skinport-session')) {
             headless: false, // Show the browser (helps with debugging/logins)
             defaultViewport: null,
             userDataDir: './skinport-session',
-        })})();
+        })
+        await test()
+    })();
+    
     socket.on('saleFeed', async (result) => {
+
     if (result.eventType == "listed")
     {
         for(let item of result.sales)
@@ -96,21 +100,26 @@ async function Buy_Item(item) {
     await page.waitForSelector(buttonSelector);
     await page.click(buttonSelector);
     await page.goto("https://skinport.com/cart")
-    await page.waitForSelector('input.Checkbox-input');
-    const inputs = await page.$$('input.Checkbox-input');
-    try{
-        await inputs[0].click();
-    }catch
-    {
+await page.waitForSelector('input.Checkbox-input');
 
-    }
+const inputs = await page.$$('input.Checkbox-input');
+
+if (inputs.length > 0) {
     try {
-    await inputs[1].click();
+        await inputs[0].click();
+    } catch (err) {
+        console.warn('Could not click input 0:', err.message);
     }
-    catch
-    {
+}
 
+if (inputs.length > 1) {
+    try {
+        await inputs[1].click();
+    } catch (err) {
+        console.warn('Could not click input 1:', err.message);
     }
+}
+
     
     
     
@@ -135,7 +144,6 @@ async function Buy_Item(item) {
 }
 async function test() {
     let item = {}
-    item.full_url = "https://skinport.com/item/awp-printstream-field-tested/64613476"
-    Buy_Item(item)
+    item.full_url = "https://skinport.com/item/butterfly-knife-ultraviolet-minimal-wear/64048852"
+    await Buy_Item(item)
 }
-//test()
