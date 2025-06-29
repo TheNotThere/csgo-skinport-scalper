@@ -15,8 +15,8 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 const min_price = 2.5; // dont change this
 const amount_allowed_to_spend = 100000;// in usd
-const cvv = "123"
-const discount = .20// discount .20 = 20% off
+const cvv = "122"
+const discount = .0// discount .20 = 20% off
 
 if (amount_allowed_to_spend < min_price)
 {
@@ -42,9 +42,9 @@ if (fs.existsSync('./skinport-session')) {
             item.full_url = full_url;
             const price  = item.salePrice / 100;
             console.log(price); // 1.93
-            // item.salePrice/item.suggestedPrice <= discount
-            //item.salePrice/100 >= min_price
-            //item.salePrice/100 <= amount_allowed_to_spend
+            console.log(parseFloat(item.salePrice) / parseFloat(item.suggestedPrice) <= 1 - discount)
+            console.log(parseFloat(item.salePrice) / 100 >= parseFloat(min_price))
+            console.log(parseFloat(item.salePrice) / 100 <= parseFloat(amount_allowed_to_spend))
             if (
             parseFloat(item.salePrice) / parseFloat(item.suggestedPrice) <= 1 - discount &&
             parseFloat(item.salePrice) / 100 >= parseFloat(min_price) &&
@@ -98,8 +98,16 @@ async function Buy_Item(item) {
     await page.goto("https://skinport.com/cart")
     await page.waitForSelector('#cb-cancellation-2');
     const inputs = await page.$$('input.Checkbox-input');
-    await inputs[0].click();
+    try{
+        await inputs[1].click();
+    }catch
+    {
+
+    }
+    
+    
     await inputs[1].click();
+    
     const checkout = await page.$('button.SubmitButton.CartSummary-checkoutBtn.SubmitButton--isFull')
     await checkout.click()
     await page.waitForSelector('iframe.js-iframe[title="Iframe for security code"]');
