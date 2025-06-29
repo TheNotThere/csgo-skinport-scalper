@@ -8,7 +8,7 @@ const parser = require("socket.io-msgpack-parser");
 
 const socket = io('wss://skinport.com', {
   transports: ['websocket'],
-  parser,  
+  parser,
 });
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -96,17 +96,23 @@ async function Buy_Item(item) {
     await page.waitForSelector(buttonSelector);
     await page.click(buttonSelector);
     await page.goto("https://skinport.com/cart")
-    await page.waitForSelector('#cb-cancellation-2');
+    await page.waitForSelector('input.Checkbox-input');
     const inputs = await page.$$('input.Checkbox-input');
     try{
-        await inputs[1].click();
+        await inputs[0].click();
     }catch
+    {
+
+    }
+    try {
+    await inputs[1].click();
+    }
+    catch
     {
 
     }
     
     
-    await inputs[1].click();
     
     const checkout = await page.$('button.SubmitButton.CartSummary-checkoutBtn.SubmitButton--isFull')
     await checkout.click()
@@ -127,3 +133,9 @@ async function Buy_Item(item) {
     const button = await page.$(pay)
     await button.click()
 }
+async function test() {
+    let item = {}
+    item.full_url = "https://skinport.com/item/awp-printstream-field-tested/64613476"
+    Buy_Item(item)
+}
+//test()
